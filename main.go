@@ -5,24 +5,16 @@ import (
 	"net/http"
 )
 
-type Course struct {
-	CourseName  string
-	CourseID    string
-	University  string
-	Instructor  string
-	Quarter     string
-	Link        string
-	ContentType string
-	Visited     int
-	Liked       int
-}
-
-type ListCourses struct {
-	Title   string
-	Courses []Course
-}
-
 func main() {
+
+	initCourseDB()
+	initUserDB()
+	insertCourse(Course{CourseName: "Life Science for Engineers", CourseID: "BIO 213", University: "Cal Poly", Instructor: "Babu",
+		Quarter: "", Link: "https://drive.google.com/drive/folders/1BEZBngPP2oWIeY5ZtsdQw-Wfj60zTLt8?usp=sharing",
+		ContentType: "Notes"})
+
+	// database()
+	// Serve static assets (ie. css)
 	fs := http.FileServer(http.Dir("static/"))
 	http.Handle("/static/", http.StripPrefix("/static/", fs))
 
