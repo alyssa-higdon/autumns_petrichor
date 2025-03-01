@@ -38,7 +38,8 @@ func initUserDB() {
 	}
 }
 
-func insertUser(user User) (int, error) {
+// TODO: Check if the email is already in the db
+func insertUser(user User) int {
 	db, err := sql.Open("sqlite3", "./database.db")
 	if err != nil {
 		log.Fatal(err)
@@ -48,11 +49,11 @@ func insertUser(user User) (int, error) {
 		user.fName, user.lName, user.email)
 	defer db.Close()
 	if err != nil {
-		return 0, err
+		log.Fatal(err)
 	}
 	var id int64
 	if id, err = res.LastInsertId(); err != nil {
-		return 0, err
+		log.Fatal(err)
 	}
-	return int(id), nil
+	return int(id)
 }
