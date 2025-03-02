@@ -2,6 +2,7 @@ package main
 
 import (
 	"html/template"
+	"log"
 	"net/http"
 )
 
@@ -33,11 +34,40 @@ func coursesStarterData() {
 
 }
 
-func main() {
+func renderTemplate(w http.ResponseWriter, tmpl string, data any) {
+	// Define paths to all your templates
+	layoutPath := "./components/Layout.html"
+	headerPath := "./components/Header.html"
+	footerPath := "./components/Footer.html"
+	pagePath := "./components/" + tmpl
 
+	// Parse the templates (you can add more templates to the list as needed)
+	t, err := template.ParseFiles(layoutPath, headerPath, footerPath, pagePath)
+	if err != nil {
+		log.Fatal("Error parsing templates: ", err)
+	}
+
+	// Render the template with the provided data
+	err = t.ExecuteTemplate(w, "Layout", data) // "Layout" is the name of the main template
+	if err != nil {
+		log.Fatal("Error executing template: ", err)
+	}
+}
+
+func homePage(w http.ResponseWriter, r *http.Request) {
+	courses := []Course{}
+	getAllCourses(&courses)
+	data := ListCourses{
+		Title:   "All Courses",
+		Courses: courses,
+	}
+	renderTemplate(w, "Index.html", data)
+}
+
+func main() {
 	initCourseDB()
 	initUserDB()
-	coursesStarterData()
+	// coursesStarterData()
 	allUniversities := []string{}
 	getDistProperty("university", allUniversities)
 
@@ -46,16 +76,13 @@ func main() {
 	fs := http.FileServer(http.Dir("static/"))
 	http.Handle("/static/", http.StripPrefix("/static/", fs))
 
-	tmpl := template.Must(template.ParseFiles("./components/Index.html"))
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		courses := []Course{}
-		getAllCourses(&courses)
-		data := ListCourses{
-			Title:   "All Courses",
-			Courses: courses,
-		}
+	http.HandleFunc("/", homePage)
+	// http.HandleFunc("/about", aboutPage)
 
-		tmpl.Execute(w, data)
-	})
-	http.ListenAndServe(":80", nil)
+	// Start the server
+	log.Println("Starting server on :8080...")
+	err := http.ListenAndServe(":8080", nil)
+	if err != nil {
+		log.Fatal("Error starting server: ", err)
+	}
 }
