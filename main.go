@@ -4,6 +4,8 @@ import (
 	"html/template"
 	"log"
 	"net/http"
+	"strconv"
+	"strings"
 )
 
 func coursesStarterData() {
@@ -57,11 +59,45 @@ func renderTemplate(w http.ResponseWriter, tmpl string, data any) {
 func homePage(w http.ResponseWriter, r *http.Request) {
 	courses := []Course{}
 	getAllCourses(&courses)
-	data := ListCourses{
-		Title:   "All Courses",
-		Courses: courses,
+	data := PageContent{
+		Title: "Home",
+		Data: ListCourses{
+			Title:   "All Courses",
+			Courses: courses,
+		},
 	}
 	renderTemplate(w, "Index.html", data)
+}
+
+func coursePage(w http.ResponseWriter, r *http.Request) {
+	// Get the course ID from the URL (e.g., /course/1)
+	id := strings.TrimPrefix(r.URL.Path, "/course/")
+	idInt, err := strconv.Atoi(id)
+	if err != nil {
+		log.Fatal("Failed casting course/id: ", err)
+	}
+
+	courses := []Course{}
+	getAllCourses(&courses)
+	// Find the course by ID
+	var selectedCourse *Course
+	for _, c := range courses {
+		if c.Id == idInt {
+			selectedCourse = &c
+			break
+		}
+	}
+
+	if selectedCourse == nil {
+		http.NotFound(w, r)
+		return
+	}
+
+	// Render the course detail page
+	data := PageContent{
+		Title: selectedCourse.CourseName,
+		Data:  selectedCourse}
+	renderTemplate(w, "Course.html", data)
 }
 
 func main() {
@@ -77,6 +113,7 @@ func main() {
 	http.Handle("/static/", http.StripPrefix("/static/", fs))
 
 	http.HandleFunc("/", homePage)
+	http.HandleFunc("/course/", coursePage)
 	// http.HandleFunc("/about", aboutPage)
 
 	// Start the server
