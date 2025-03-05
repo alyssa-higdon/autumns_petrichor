@@ -1,8 +1,9 @@
 {{define "Content"}}
-<h2>{{.Data.CourseName}} ({{.Data.CourseID}})</h2>
-<h3>{{.Data.University}}</h3>
+<div class="main__content">
+<h1>{{.Data.CourseName}} ({{.Data.CourseID}})</h1>
+<h2>{{.Data.University}}</h2>
 <p>{{.Data.Instructor}}</p>
 <p>{{.Data.Quarter}}</p>
-<p>{{.Data.Link}}</p>
-
+<a href="{{.Data.Link}}">Link to {{.Data.ContentType}}</a>
+</div>
 {{end}}
