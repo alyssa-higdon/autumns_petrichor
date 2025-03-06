@@ -28,12 +28,43 @@
                         </a>
                     </li>
                     <li class="navbar__btn">
-                        <a href="/" class="button">
-                            LogIn
-                        </a>
+                        <button onclick="document.getElementById('loginModal').style.display='block'">Log in</button>
+                        <!-- <a href="/" class="button">
+                            Log in
+                        </a> -->
                     </li>
                 </ul>
             </div>
         </nav>
+
+    <!-- The Log In Modal -->
+<div id="loginModal" class="modal">
+    <span onclick="document.getElementById('loginModal').style.display='none'"
+  class="close" title="Close Modal">&times;</span>
+  
+    <!-- Modal Content -->
+    <form class="modal-content animate" action="/action_page.php" method="POST">
+      <div class="container">
+        <label for="uname"><b>Username</b></label>
+        <input type="text" placeholder="Username" name="uname" required>
+  
+        <label for="psw"><b>Password</b></label>
+        <input type="password" placeholder="Password" name="psw" required>
+  
+        <button class="button" type="submit">Login</button>
+        <label>
+          <input type="checkbox" checked="checked" name="remember"> Remember me
+        </label>
+
+        <br>
+
+        
+        <div class="account"><a href="#">Create Account</a></div>
+        <br>
+        <div class="account">Forgot <a href="#">password?</a></div>
+        <button type="button" onclick="document.getElementById('loginModal').style.display='none'" class="cancelbtn">Cancel</button>
+      </div>
+      </div>
+    </form>
 
 {{end}}
