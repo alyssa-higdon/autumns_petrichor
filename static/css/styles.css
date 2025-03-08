@@ -190,13 +190,27 @@ button:hover {
 }
 
 /* Hero */
+
+/* .wrapper {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  } */
+
 body {
     background-color: #141411;
-
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    min-height: 100vh;
 }
+
 .main {
     background-color: #141411;
-
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
 }
 
 .main.container {
@@ -302,7 +316,6 @@ body {
 }
 
 /* Mobile Responsive */
-
 @media screen and (max-width: 768px) {
     .main__container {
         display:grid;
@@ -365,7 +378,7 @@ body {
     display: flex;
     flex-direction:  column;
     align-items: center;
-    height:100vh;
+    height: auto;
 }
 
 .course h1 {
@@ -470,12 +483,18 @@ body {
 
 /* Footer CSS */
 .footer__container {
-    background-color: #141414;
-    padding: 5rem 0;
-    display: flex;
+    padding: 1rem 0;
+    margin-top: auto;
+    /* display: flex; */
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    /* min-height: 50px; */
+    
+}
+
+.footer p {
+    color: #fff;
 }
 
 /* The sidebar menu */
@@ -506,11 +525,11 @@ body {
   }
   
   /* Style page content */
-  .main {
-    margin-left: 160px; /* Same as the width of the sidebar */
+  /* .main {
+    margin-left: 160px; Same as the width of the sidebar
     padding: 0px 10px;
   }
-  
+   */
   /* On smaller screens, where height is less than 450px, change the style of the sidebar (less padding and a smaller font size) */
   @media screen and (max-height: 450px) {
     .sidenav {padding-top: 15px;}
@@ -552,10 +571,21 @@ img.avatar {
   padding: 16px;
 }
 
-span.psw {
-  float: right;
-  padding-top: 16px;
+.container a {
+    color: #4837ff;
 }
+
+.account {
+  float: right;
+  padding-top: 10px;
+  color: #4837ff;
+  /* padding-top: 16px; */
+}
+
+.container.account a {
+    color: #08bbc7;
+    /* padding-top: 16px; */
+  }
 
 /* The Modal (background) */
 .modal {

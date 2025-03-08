@@ -1,9 +1,13 @@
 {{define "Content"}}
-<div class="main__content">
-<h1>{{.Data.CourseName}} ({{.Data.CourseID}})</h1>
-<h2>{{.Data.University}}</h2>
-<p>{{.Data.Instructor}}</p>
-<p>{{.Data.Quarter}}</p>
-<a href="{{.Data.Link}}">Link to {{.Data.ContentType}}</a>
+<div class="main"> 
+    <div class="main__container">
+    <div class="main__content">
+        <h1>{{.Data.CourseName}} ({{.Data.CourseID}})</h1>
+        <h2>{{.Data.University}}</h2>
+        <p>{{.Data.Instructor}}</p>
+        <p>{{.Data.Quarter}}</p>
+        <a href="{{.Data.Link}}">Link to {{.Data.ContentType}}</a>
+    </div>
+</div>
 </div>
 {{end}}
