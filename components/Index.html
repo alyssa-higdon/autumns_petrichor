@@ -1,7 +1,21 @@
 {{ define "Content" }}
-  <!-- Courses Display -->
 <div class="course">
-    <h2>{{.Data.Title}}</h2>
+<!-- Search Bar -->
+<h1>Search</h1>
+
+<form action="/action_page.php" method="get">
+  <input list="courses" placeholder="Search by course" name="course" id="course">
+  <datalist id="courses">
+    {{range .Data.Courses}}
+      <option value={{.CourseName}}>
+    {{end}}
+  </datalist>
+  <input type="submit">
+</form>
+
+  <!-- Courses Display -->
+
+    <h1>{{.Data.Title}}</h1>
         <div class="course__container">
               {{range .Data.Courses}}
                   <div class="course__card">
@@ -10,6 +24,6 @@
                     <button onclick="location.href='course/{{.Id}}'">Get Started</button>
                   </div>
                {{end}}
-          </div>
-        </div>  
+        </div>
+</div>  
 {{ end}}
