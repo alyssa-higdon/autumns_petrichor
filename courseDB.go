@@ -8,6 +8,11 @@ import (
 	// "os"
 )
 
+type PageContent struct {
+	Title string
+	Data  any
+}
+
 type Course struct {
 	Id          int
 	CourseName  string
@@ -77,6 +82,8 @@ func insertCourse(course Course) int {
 	return int(id)
 }
 
+// Ex: Get all university names
+// This is good for the side navbar to choose only classes from certain universities
 func getDistProperty(property string, retList []string) {
 	db, err := sql.Open("sqlite3", "./database.db")
 	if err != nil {
@@ -117,4 +124,27 @@ func getAllCourses(retList *[]Course) {
 		}
 		*retList = append(*retList, course)
 	}
+}
+
+// This function finds the course based on the CourseName and University
+func findCourse(courseName string, university string) Course {
+	db, err := sql.Open("sqlite3", "./database.db")
+	if err != nil {
+		log.Fatal(err)
+	}
+	rows, err := db.Query(`SELECT * from courses WHERE courseName=? AND university=?`, courseName, university)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer db.Close()
+	defer rows.Close()
+	for rows.Next() {
+		var course Course
+		if err := rows.Scan(&course.Id, &course.CourseName, &course.CourseID, &course.University, &course.Instructor,
+			&course.Quarter, &course.Link, &course.ContentType, &course.Visited, &course.Liked); err != nil {
+			log.Fatal(err)
+		}
+		return course
+	}
+	return Course{}
 }

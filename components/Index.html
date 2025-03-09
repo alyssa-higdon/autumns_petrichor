@@ -3,14 +3,14 @@
 <!-- Search Bar -->
 <h1>Search</h1>
 
-<form action="/action_page.php" method="get">
-  <input list="courses" placeholder="Search by course" name="course" id="course">
-  <datalist id="courses">
+<form method="post">
+  <input list="searchCourses" placeholder="Search by course" name="searchCourse" id="searchCourse">
+  <datalist id="searchCourses">
     {{range .Data.Courses}}
-      <option value={{.CourseName}}>
+      <option value="{{.CourseName}} - {{.University}}"></option>
     {{end}}
   </datalist>
-  <input type="submit">
+  <input type="submit"> 
 </form>
 
   <!-- Courses Display -->
