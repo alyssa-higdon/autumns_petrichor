@@ -8,13 +8,17 @@ import (
 	// "os"
 )
 
-// add password after I figure out encryption
 type User struct {
 	fName string
 	lName string
 	email string
+	pwd string
 }
 
+// Input  : None
+// Returns: None
+// Output : If the users table in the database.db doesn't already exist, create the table with
+//          columns for a firstname, lastname, email, and password
 func initUserDB() {
 	// Create database if doesn't already exist
 	db, err := sql.Open("sqlite3", "./database.db")
@@ -27,8 +31,9 @@ func initUserDB() {
 	sqlStmt := `CREATE TABLE IF NOT EXISTS users (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       fName TEXT,
-	  lName TEXT,
-      email TEXT
+      lName TEXT,
+      email TEXT,
+      pwd   TEXT,
     )`
 
 	_, err = db.Exec(sqlStmt)
@@ -39,13 +44,14 @@ func initUserDB() {
 }
 
 // TODO: Check if the email is already in the db
+// TODO: Password encyption
 func insertUser(user User) int {
 	db, err := sql.Open("sqlite3", "./database.db")
 	if err != nil {
 		log.Fatal(err)
 	}
 	// Add password after figure out encryption
-	res, err := db.Exec(`INSERT INTO users (fName, lName, email) VALUES(?,?,?);`,
+	res, err := db.Exec(`INSERT INTO users (fName, lName, email, pwd) VALUES(?,?,?,?);`,
 		user.fName, user.lName, user.email)
 	defer db.Close()
 	if err != nil {
