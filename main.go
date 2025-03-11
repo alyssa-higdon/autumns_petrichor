@@ -8,6 +8,11 @@ import (
 	"strings"
 )
 
+// Input  : w http.ResponceWriter
+//          tmpl string     : name of template to render (ex: Index.html)
+//          data any        : data that needs to be passed to fill the template (Ex: Header names, course data to fill pages)
+// Returns: None
+// Output : Renders the desired template with the header and footer
 func renderTemplate(w http.ResponseWriter, tmpl string, data any) {
 	// Define paths to all your templates
 	layoutPath := "./components/Layout.html"
