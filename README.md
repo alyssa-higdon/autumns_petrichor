@@ -11,5 +11,6 @@ Higher education should not cost as much it does today. Autumn's Petrichor is a 
 * Favoriting courses saved in the user's profile
 ## Instilation
 ```go get github.com/mattn/go-sqlite3```
+Need to have ```export CGO_ENABLED=1``` in .bashrc
 ## TO Run
 ```go run AutumnsPetrichor```
