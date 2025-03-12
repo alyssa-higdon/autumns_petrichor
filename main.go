@@ -13,6 +13,7 @@ import (
 //          data any        : data that needs to be passed to fill the template (Ex: Header names, course data to fill pages)
 // Returns: None
 // Output : Renders the desired template with the header and footer
+// Purpose: Render out the desired page with the header and footer. Layout.html describes how to combine them
 func renderTemplate(w http.ResponseWriter, tmpl string, data any) {
 	// Define paths to all your templates
 	layoutPath := "./components/Layout.html"
@@ -33,6 +34,12 @@ func renderTemplate(w http.ResponseWriter, tmpl string, data any) {
 	}
 }
 
+// Input  : w http.ResponseWriter
+//          r *http.Request
+// Returns: None
+// Output : The home page
+// Purpose: This function is a wrapper to renderTemplate, where all of the data for
+//          the home page is processed before sending it to renderTemplate
 func homePage(w http.ResponseWriter, r *http.Request) {
 	var searchCourse string = ""
 	courses := []Course{}
@@ -63,6 +70,12 @@ func homePage(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// Input  : w http.ResponseWriter
+//          r *http.Request
+// Returns: None
+// Output : The home page
+// Purpose: This function is a wrapper to renderTemplate, where all of the data for
+//          a course page is processed before sending it to renderTemplate
 func coursePage(w http.ResponseWriter, r *http.Request) {
 	// Get the course ID from the URL (e.g., /course/1)
 	id := strings.TrimPrefix(r.URL.Path, "/course/")
