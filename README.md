@@ -10,5 +10,6 @@ Higher education should not cost as much it does today. Autumn's Petrichor is a 
 * Displaying only courses from a particular university
 * Favoriting courses saved in the user's profile
 ## Instilation
-```go get github.com/mattn/go-sqlite3
-```
+```go get github.com/mattn/go-sqlite3```
+## TO Run
+```go run AutumnsPetrichor```
