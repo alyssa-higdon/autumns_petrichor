@@ -62,14 +62,10 @@ func initCourseDB() {
 	}
 }
 
-// TODO: Check if the course is already in the db
-// Maybe add INSERT INTO courses (courseName, courseID, university, instructor, quarter, link, contentType, visited, liked)
-// VALUES(?,?,?,?,?,?,?,0,0) WHERE NOT EXISTS (SELECT * FROM courses WHERE column1 = value1 AND SELECT * FROM courses WHERE column3 = value3);
-// to sqlSmt
 // Input  : course Course : course to insert into the course table
 // Returns: int : id of the course (index of the course in the table)
 // Output : None
-// Purpose: Insert course into courses table
+// Purpose: Insert course into courses table if it's not already in the table
 func insertCourse(course Course) int {
 	db, err := sql.Open("sqlite3", "./database.db")
 	if err != nil {
@@ -77,9 +73,14 @@ func insertCourse(course Course) int {
 	}
 
 	res, err := db.Exec(`INSERT INTO courses (courseName, courseID, university, instructor, quarter, link, contentType, visited, liked)
-		VALUES(?,?,?,?,?,?,?,0,0);`,
+	SELECT ?, ?, ?, ?, ?, ?, ?, 0, 0
+	WHERE NOT EXISTS (
+		SELECT 1 
+		FROM courses 
+		WHERE courseName = ? AND university = ?
+	);`,
 		course.CourseName, course.CourseID, course.University, course.Instructor,
-		course.Quarter, course.Link, course.ContentType)
+		course.Quarter, course.Link, course.ContentType, course.CourseName, course.University)
 
 	defer db.Close()
 
