@@ -5,20 +5,20 @@ import (
 	"log"
 
 	_ "github.com/mattn/go-sqlite3"
-	// "os"
 )
 
 type User struct {
 	fName string
 	lName string
 	email string
-	pwd string
+	pwd   string
 }
 
 // Input  : None
 // Returns: None
 // Output : If the users table in the database.db doesn't already exist, create the table with
-//          columns for a firstname, lastname, email, and password
+//
+//	columns for a firstname, lastname, email, and password
 func initUserDB() {
 	// Create database if doesn't already exist
 	db, err := sql.Open("sqlite3", "./database.db")
@@ -33,7 +33,7 @@ func initUserDB() {
       fName TEXT,
       lName TEXT,
       email TEXT,
-      pwd   TEXT,
+      pwd   TEXT
     )`
 
 	_, err = db.Exec(sqlStmt)

@@ -9,8 +9,10 @@ import (
 )
 
 // Input  : w http.ResponceWriter
-//          tmpl string     : name of template to render (ex: Index.html)
-//          data any        : data that needs to be passed to fill the template (Ex: Header names, course data to fill pages)
+//
+//	tmpl string     : name of template to render (ex: Index.html)
+//	data any        : data that needs to be passed to fill the template (Ex: Header names, course data to fill pages)
+//
 // Returns: None
 // Output : Renders the desired template with the header and footer
 // Purpose: Render out the desired page with the header and footer. Layout.html describes how to combine them
@@ -35,13 +37,15 @@ func renderTemplate(w http.ResponseWriter, tmpl string, data any) {
 }
 
 // Input  : w http.ResponseWriter
-//          r *http.Request
+//
+//	r *http.Request
+//
 // Returns: None
 // Output : The home page
 // Purpose: This function is a wrapper to renderTemplate, where all of the data for
-//          the home page is processed before sending it to renderTemplate
+//
+//	the home page is processed before sending it to renderTemplate
 func homePage(w http.ResponseWriter, r *http.Request) {
-	var searchCourse string = ""
 	courses := []Course{}
 	getAllCourses(&courses)
 	data := PageContent{
@@ -52,30 +56,39 @@ func homePage(w http.ResponseWriter, r *http.Request) {
 		},
 	}
 
-	searchCourse = r.FormValue("searchCourse")
-	if searchCourse != "" {
+	if searchCourse := r.FormValue("searchCourse"); searchCourse != "" {
 		var searchCourseSp = strings.Split(searchCourse, " - ")
 		var searchCourseName = searchCourseSp[0]
 		var searchCourseUni = searchCourseSp[1]
 
 		var selectedCourse = findCourse(searchCourseName, searchCourseUni)
-		searchCourse = ""
-		data := PageContent{
-			Title: selectedCourse.CourseName,
-			Data:  selectedCourse}
-		renderTemplate(w, "Course.html", data)
-		// something here, I need to load up /courses/courseId
+		http.Redirect(w, r, "/course/"+strconv.Itoa(selectedCourse.Id), http.StatusSeeOther)
 	} else {
 		renderTemplate(w, "Index.html", data)
 	}
 }
 
+func homePagePOST(w http.ResponseWriter, r *http.Request) {
+	if searchCourse := r.FormValue("searchCourse"); searchCourse != "" {
+		var searchCourseSp = strings.Split(searchCourse, " - ")
+		var searchCourseName = searchCourseSp[0]
+		var searchCourseUni = searchCourseSp[1]
+
+		var selectedCourse = findCourse(searchCourseName, searchCourseUni)
+		http.Redirect(w, r, "/course/"+strconv.Itoa(selectedCourse.Id), http.StatusSeeOther)
+
+	}
+}
+
 // Input  : w http.ResponseWriter
-//          r *http.Request
+//
+//	r *http.Request
+//
 // Returns: None
 // Output : The home page
 // Purpose: This function is a wrapper to renderTemplate, where all of the data for
-//          a course page is processed before sending it to renderTemplate
+//
+//	a course page is processed before sending it to renderTemplate
 func coursePage(w http.ResponseWriter, r *http.Request) {
 	// Get the course ID from the URL (e.g., /course/1)
 	id := strings.TrimPrefix(r.URL.Path, "/course/")
@@ -110,7 +123,7 @@ func coursePage(w http.ResponseWriter, r *http.Request) {
 func main() {
 	initCourseDB()
 	initUserDB()
-	//coursesStarterData()
+	// coursesStarterData()
 	allUniversities := []string{}
 	getDistProperty("university", allUniversities)
 
@@ -119,6 +132,7 @@ func main() {
 	http.Handle("/static/", http.StripPrefix("/static/", fs))
 
 	http.HandleFunc("/", homePage)
+	http.HandleFunc("/submit", homePagePOST)
 	http.HandleFunc("/course/", coursePage)
 
 	// Start the server

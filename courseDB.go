@@ -5,7 +5,6 @@ import (
 	"log"
 
 	_ "github.com/mattn/go-sqlite3"
-	// "os"
 )
 
 type PageContent struct {
@@ -82,8 +81,6 @@ func insertCourse(course Course) int {
 		course.CourseName, course.CourseID, course.University, course.Instructor,
 		course.Quarter, course.Link, course.ContentType)
 
-
-	
 	defer db.Close()
 
 	if err != nil {
@@ -97,7 +94,9 @@ func insertCourse(course Course) int {
 }
 
 // Input  : property string  : Property of course table searching for
-//        retList []string : A list to return all of the items of the specific property
+//
+//	retList []string : A list to return all of the items of the specific property
+//
 // Returns: None
 // Output : List of all of the items of the specific property
 // Purpose: To find all items of a specific property in the courses table
