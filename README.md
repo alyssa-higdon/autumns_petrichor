@@ -6,7 +6,7 @@ Higher education should not cost as much it does today. Autumn's Petrichor is a 
 * Display of all courses on the home page
 * Frontend for Login page
 ### Video Demo
-![Alt Text]("./README_Attatchments/videoDemo.gif")
+![til](./README_Attachments/videoDemo.gif)
 ### TODO:
 * Backend for Login page (including password encryption)
 * Displaying only courses from a particular university
