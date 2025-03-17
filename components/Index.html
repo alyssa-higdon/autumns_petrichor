@@ -1,5 +1,21 @@
 {{ define "Content" }}
+<!-- Side Nav Bar -->
+<div id="mySidenav" class="sidenav">
+  <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+  <a href="#">About</a>
+  <a href="#">Services</a>
+  <a href="#">Clients</a>
+  <a href="#">Contact</a>
+  <a href="#">About</a>
+  <a href="#">Services</a>
+  <a href="#">Clients</a>
+  <a href="#">Contact</a>
+</div>
+ <script>
+document.getElementById("mySidenav").style.width = "160px";
+</script>
 <!-- Search Bar -->
+<div class="course">
 <div class="search">
 <h1>Search {{.Data.Title}}</h1>
 <form method="post">
@@ -12,7 +28,7 @@
 </form>
 </div>
 <br>
-<div class="course">
+<!-- <div class="course"> -->
   <!-- Courses Display -->
 
 <h1>{{.Data.Title}}</h1>
