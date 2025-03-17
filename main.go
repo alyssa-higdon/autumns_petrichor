@@ -47,23 +47,27 @@ func renderTemplate(w http.ResponseWriter, tmpl string, data any) {
 //	the home page is processed before sending it to renderTemplate
 func homePage(w http.ResponseWriter, r *http.Request) {
 	courses := []Course{}
+	universities := []string{}
+
 	getAllCourses(&courses)
+	getDistProperty("university", &universities)
 	data := PageContent{
 		Title: "Home",
-		Data: ListCourses{
-			Title:   "All Courses",
-			Courses: courses,
+		Data: Home{
+			LCourses: ListCourses{
+				Title:   "All Courses",
+				Courses: courses,
+			},
+			SBar: SideBar{
+				Sections: []Section{
+					{Title: "Universities",
+						Items: universities},
+				},
+			},
 		},
 	}
 
-	if searchCourse := r.FormValue("searchCourse"); searchCourse != "" {
-		var searchCourseSp = strings.Split(searchCourse, " - ")
-		var searchCourseName = searchCourseSp[0]
-		var searchCourseUni = searchCourseSp[1]
-
-		var selectedCourse = findCourse(searchCourseName, searchCourseUni)
-		http.Redirect(w, r, "/course/"+strconv.Itoa(selectedCourse.Id), http.StatusSeeOther)
-	} else {
+	if searchCourse := r.FormValue("searchCourse"); searchCourse == "" {
 		renderTemplate(w, "Index.html", data)
 	}
 }
@@ -123,9 +127,9 @@ func coursePage(w http.ResponseWriter, r *http.Request) {
 func main() {
 	initCourseDB()
 	initUserDB()
-	// coursesStarterData()
-	allUniversities := []string{}
-	getDistProperty("university", allUniversities)
+	//coursesStarterData()
+	// allUniversities := []string{}
+	// getDistProperty("university", &allUniversities)
 
 	// Serve static assets (ie. css)
 	fs := http.FileServer(http.Dir("static/"))

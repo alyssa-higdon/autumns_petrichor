@@ -30,6 +30,20 @@ type ListCourses struct {
 	Courses []Course
 }
 
+type Section struct {
+	Title string
+	Items []string
+}
+
+type SideBar struct {
+	Sections []Section
+}
+
+type Home struct {
+	LCourses ListCourses
+	SBar     SideBar
+}
+
 // Input  : None
 // Returns: None
 // Output : Creates db if doesn't exist and creates course table if doesn't exist
@@ -96,14 +110,14 @@ func insertCourse(course Course) int {
 
 // Input  : property string  : Property of course table searching for
 //
-//	retList []string : A list to return all of the items of the specific property
+//	retList *[]string : A list to return all of the items of the specific property
 //
 // Returns: None
 // Output : List of all of the items of the specific property
 // Purpose: To find all items of a specific property in the courses table
 // Ex: Get all university names
 // This is good for the side navbar to choose only classes from certain universities
-func getDistProperty(property string, retList []string) {
+func getDistProperty(property string, retList *[]string) {
 	db, err := sql.Open("sqlite3", "./database.db")
 	if err != nil {
 		log.Fatal(err)
@@ -120,7 +134,7 @@ func getDistProperty(property string, retList []string) {
 		if err := rows.Scan(&property); err != nil {
 			log.Fatal(err)
 		}
-		retList = append(retList, property)
+		*retList = append(*retList, property)
 	}
 }
 

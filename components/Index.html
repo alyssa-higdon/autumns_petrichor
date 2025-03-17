@@ -1,27 +1,25 @@
 {{ define "Content" }}
 <!-- Side Nav Bar -->
 <div id="mySidenav" class="sidenav">
-  <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-  <a href="#">About</a>
-  <a href="#">Services</a>
-  <a href="#">Clients</a>
-  <a href="#">Contact</a>
-  <a href="#">About</a>
-  <a href="#">Services</a>
-  <a href="#">Clients</a>
-  <a href="#">Contact</a>
+  {{range .Data.SBar.Sections}}
+    <h2>{{.Title}}</h2>
+      {{range .Items}}
+      <a href="#">{{.}}</a>
+  {{end}}
+  {{end}}
+  
 </div>
  <script>
-document.getElementById("mySidenav").style.width = "160px";
+// document.getElementById("mySidenav").style.width = "160px";
 </script>
 <!-- Search Bar -->
 <div class="course">
 <div class="search">
-<h1>Search {{.Data.Title}}</h1>
+<h1>Search {{.Data.LCourses.Title}}</h1>
 <form method="post">
-  <input type="text" class="search__bar" list="searchCourses" placeholder="Search {{.Data.Title}}" name="searchCourse" id="searchCourse">
+  <input type="text" class="search__bar" list="searchCourses" placeholder="Search {{.Data.LCourses.Title}}" name="searchCourse" id="searchCourse">
   <datalist id="searchCourses">
-    {{range .Data.Courses}}
+    {{range .Data.LCourses.Courses}}
       <option value="{{.CourseName}} - {{.University}}"></option>
     {{end}}
   </datalist>
@@ -31,9 +29,9 @@ document.getElementById("mySidenav").style.width = "160px";
 <!-- <div class="course"> -->
   <!-- Courses Display -->
 
-<h1>{{.Data.Title}}</h1>
+<h1>{{.Data.LCourses.Title}}</h1>
     <div class="course__container">
-          {{range .Data.Courses}}
+          {{range .Data.LCourses.Courses}}
               <div class="course__card">
                 <h2>{{.CourseName}}</h2>
                 <p>{{.University}}</p>
