@@ -2,7 +2,6 @@ package main
 
 import (
 	"database/sql"
-	"fmt"
 	"log"
 
 	_ "github.com/mattn/go-sqlite3"
@@ -187,7 +186,6 @@ func findCourses(reqs map[string]string, retList *[]Course) {
 		}
 	}
 
-	fmt.Println("", query)
 	rows, err := db.Query(query)
 	if err != nil {
 		log.Fatal(err)
@@ -201,6 +199,5 @@ func findCourses(reqs map[string]string, retList *[]Course) {
 			log.Fatal(err)
 		}
 		*retList = append(*retList, course)
-		fmt.Println("", course.CourseName)
 	}
 }

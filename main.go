@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"html/template"
 	"log"
 	"net/http"
@@ -52,6 +51,15 @@ func homePage(w http.ResponseWriter, r *http.Request) {
 
 	getAllCourses(&courses)
 	getDistProperty("university", &universities)
+
+	// Check for a university filter in the query parameters
+	selectedUniversity := r.URL.Query().Get("university")
+	retList := []Course{}
+	findCourses(map[string]string{"university": selectedUniversity}, &retList)
+
+	if selectedUniversity != "" {
+		courses = retList
+	}
 	data := PageContent{
 		Title: "Home",
 		Data: Home{
@@ -68,35 +76,17 @@ func homePage(w http.ResponseWriter, r *http.Request) {
 		},
 	}
 
-	// Check for a university filter in the query parameters
-	//selectedUniversity := r.URL.Query().Get("university")
-
 	if searchCourse := r.FormValue("searchCourse"); searchCourse == "" {
 		renderTemplate(w, "Index.html", data)
 	}
 
 }
 
-// func homePagePOST(w http.ResponseWriter, r *http.Request) {
-// 	if searchCourse := r.FormValue("searchCourse"); searchCourse != "" {
-// 		var searchCourseSp = strings.Split(searchCourse, " - ")
-// 		var searchCourseName = searchCourseSp[0]
-// 		var searchCourseUni = searchCourseSp[1]
-
-// 		var selectedCourse = s(searchCourseName, searchCourseUni)
-// 		http.Redirect(w, r, "/course/"+strconv.Itoa(selectedCourse.Id), http.StatusSeeOther)
-
-// 	}
-// }
-
 func homePagePOST(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("made it into homepagepost")
 	if searchCourse := r.FormValue("searchCourse"); searchCourse != "" {
 		var searchCourseSp = strings.Split(searchCourse, " - ")
 		var searchCourseName = searchCourseSp[0]
 		var searchCourseUni = searchCourseSp[1]
-		fmt.Println("homepagepost: ", searchCourseName)
-		fmt.Println("homepagepost: ", searchCourseUni)
 
 		var reqs = map[string]string{
 			"courseName": searchCourseName,
