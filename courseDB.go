@@ -165,9 +165,9 @@ func getAllCourses(retList *[]Course) {
 }
 
 // Input  : reqs   : map of the requirements you're looking for (ie {{courseName: Life Science for Engineers}, {university: Cal Poly}})
-//
-//	retList: *[]Course : a pointer to a list to return of all Courses with the desired reqs
-//
+
+// 	retList: *[]Course : a pointer to a list to return of all Courses with the desired reqs
+
 // Returns:
 // Output : Course : Course that you are querying for
 // Purpose: Finds the Course based on the CourseName and University
@@ -178,10 +178,10 @@ func findCourse(reqs map[string]string, retList *[]Course) {
 	}
 
 	// Build query statement
-	var query = `SELECT * from courses WHERE`
+	var query = `SELECT * from courses WHERE `
 	var i = len(reqs)
 	for param, arg := range reqs {
-		query += param + "=" + arg
+		query += param + "='" + arg + "'"
 		i--
 		if i != 0 {
 			query += " AND "

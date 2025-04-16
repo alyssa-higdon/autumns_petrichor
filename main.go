@@ -77,6 +77,18 @@ func homePage(w http.ResponseWriter, r *http.Request) {
 
 }
 
+// func homePagePOST(w http.ResponseWriter, r *http.Request) {
+// 	if searchCourse := r.FormValue("searchCourse"); searchCourse != "" {
+// 		var searchCourseSp = strings.Split(searchCourse, " - ")
+// 		var searchCourseName = searchCourseSp[0]
+// 		var searchCourseUni = searchCourseSp[1]
+
+// 		var selectedCourse = findCourse(searchCourseName, searchCourseUni)
+// 		http.Redirect(w, r, "/course/"+strconv.Itoa(selectedCourse.Id), http.StatusSeeOther)
+
+// 	}
+// }
+
 func homePagePOST(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("made it into homepagepost")
 	if searchCourse := r.FormValue("searchCourse"); searchCourse != "" {
@@ -92,7 +104,11 @@ func homePagePOST(w http.ResponseWriter, r *http.Request) {
 
 		retList := []Course{}
 		findCourse(reqs, &retList)
-		http.Redirect(w, r, "/course/"+strconv.Itoa(retList[0].Id), http.StatusSeeOther)
+		if len(retList) > 0 {
+			http.Redirect(w, r, "/course/"+strconv.Itoa(retList[0].Id), http.StatusSeeOther)
+		} else {
+			http.Error(w, "Course not found", http.StatusNotFound)
+		}
 
 	}
 }

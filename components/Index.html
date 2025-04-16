@@ -3,8 +3,9 @@
 <div id="mySidenav" class="sidenav">
   {{range .Data.SBar.Sections}}
     <h2>{{.Title}}</h2>
+    {{$sectionTitle := .Title}}
       {{range .Items}}
-      <a href="#">{{.}}</a>
+      <a href='?{{$sectionTitle}}={{.}}'>{{.}}</a>   
   {{end}}
   {{end}}
   
@@ -16,7 +17,7 @@
 <div class="course">
 <div class="search">
 <h1>Search {{.Data.LCourses.Title}}</h1>
-<form method="post">
+<form method="post" action="/submit">
   <input type="text" class="search__bar" list="searchCourses" placeholder="Search {{.Data.LCourses.Title}}" name="searchCourse" id="searchCourse">
   <datalist id="searchCourses">
     {{range .Data.LCourses.Courses}}
