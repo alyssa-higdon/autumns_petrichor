@@ -83,7 +83,7 @@ func homePage(w http.ResponseWriter, r *http.Request) {
 // 		var searchCourseName = searchCourseSp[0]
 // 		var searchCourseUni = searchCourseSp[1]
 
-// 		var selectedCourse = findCourse(searchCourseName, searchCourseUni)
+// 		var selectedCourse = s(searchCourseName, searchCourseUni)
 // 		http.Redirect(w, r, "/course/"+strconv.Itoa(selectedCourse.Id), http.StatusSeeOther)
 
 // 	}
@@ -103,7 +103,7 @@ func homePagePOST(w http.ResponseWriter, r *http.Request) {
 			"university": searchCourseUni}
 
 		retList := []Course{}
-		findCourse(reqs, &retList)
+		findCourses(reqs, &retList)
 		if len(retList) > 0 {
 			http.Redirect(w, r, "/course/"+strconv.Itoa(retList[0].Id), http.StatusSeeOther)
 		} else {
