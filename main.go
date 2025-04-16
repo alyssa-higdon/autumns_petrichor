@@ -23,8 +23,15 @@ func renderTemplate(w http.ResponseWriter, tmpl string, data any) {
 	footerPath := "./components/Footer.html"
 	pagePath := "./components/" + tmpl
 
-	// Parse the templates (you can add more templates to the list as needed)
-	t, err := template.ParseFiles(layoutPath, headerPath, footerPath, pagePath)
+	funcMap := template.FuncMap{
+		"lower": strings.ToLower,
+	}
+
+	// Create a new template and attach the function map
+	t := template.New("Layout").Funcs(funcMap)
+
+	// Parse the templates
+	t, err := t.ParseFiles(layoutPath, headerPath, footerPath, pagePath)
 	if err != nil {
 		log.Fatal("Error parsing templates: ", err)
 	}
@@ -69,7 +76,7 @@ func homePage(w http.ResponseWriter, r *http.Request) {
 			},
 			SBar: SideBar{
 				Sections: []Section{
-					{Title: "university",
+					{Title: "University",
 						Items: universities},
 				},
 			},

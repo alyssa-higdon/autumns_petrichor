@@ -3,7 +3,7 @@
 <div id="mySidenav" class="sidenav">
   {{range .Data.SBar.Sections}}
     <h2>{{.Title}}</h2>
-    {{$sectionTitle := .Title}}
+    {{$sectionTitle := lower .Title}}
       {{range .Items}}
       <a href='?{{$sectionTitle}}={{.}}'>{{.}}</a>   
   {{end}}
