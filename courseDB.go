@@ -2,6 +2,7 @@ package main
 
 import (
 	"database/sql"
+	"fmt"
 	"log"
 
 	_ "github.com/mattn/go-sqlite3"
@@ -163,16 +164,32 @@ func getAllCourses(retList *[]Course) {
 	}
 }
 
-// Input  : courseName string : name of the course searching for
-// Returns: Course : Course that you are querying for
+// Input  : reqs   : map of the requirements you're looking for (ie {{courseName: Life Science for Engineers}, {university: Cal Poly}})
+//
+//	retList: *[]Course : a pointer to a list to return of all Courses with the desired reqs
+//
+// Returns:
 // Output : Course : Course that you are querying for
 // Purpose: Finds the Course based on the CourseName and University
-func findCourse(courseName string, university string) Course {
+func findCourse(reqs map[string]string, retList *[]Course) {
 	db, err := sql.Open("sqlite3", "./database.db")
 	if err != nil {
 		log.Fatal(err)
 	}
-	rows, err := db.Query(`SELECT * from courses WHERE courseName=? AND university=?`, courseName, university)
+
+	// Build query statement
+	var query = `SELECT * from courses WHERE`
+	var i = len(reqs)
+	for param, arg := range reqs {
+		query += param + "=" + arg
+		i--
+		if i != 0 {
+			query += " AND "
+		}
+	}
+
+	fmt.Println("", query)
+	rows, err := db.Query(query)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -184,7 +201,7 @@ func findCourse(courseName string, university string) Course {
 			&course.Quarter, &course.Link, &course.ContentType, &course.Visited, &course.Liked); err != nil {
 			log.Fatal(err)
 		}
-		return course
+		*retList = append(*retList, course)
+		fmt.Println("", course.CourseName)
 	}
-	return Course{}
 }

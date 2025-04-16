@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"html/template"
 	"log"
 	"net/http"
@@ -60,26 +61,38 @@ func homePage(w http.ResponseWriter, r *http.Request) {
 			},
 			SBar: SideBar{
 				Sections: []Section{
-					{Title: "Universities",
+					{Title: "university",
 						Items: universities},
 				},
 			},
 		},
 	}
 
+	// Check for a university filter in the query parameters
+	//selectedUniversity := r.URL.Query().Get("university")
+
 	if searchCourse := r.FormValue("searchCourse"); searchCourse == "" {
 		renderTemplate(w, "Index.html", data)
 	}
+
 }
 
 func homePagePOST(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("made it into homepagepost")
 	if searchCourse := r.FormValue("searchCourse"); searchCourse != "" {
 		var searchCourseSp = strings.Split(searchCourse, " - ")
 		var searchCourseName = searchCourseSp[0]
 		var searchCourseUni = searchCourseSp[1]
+		fmt.Println("homepagepost: ", searchCourseName)
+		fmt.Println("homepagepost: ", searchCourseUni)
 
-		var selectedCourse = findCourse(searchCourseName, searchCourseUni)
-		http.Redirect(w, r, "/course/"+strconv.Itoa(selectedCourse.Id), http.StatusSeeOther)
+		var reqs = map[string]string{
+			"courseName": searchCourseName,
+			"university": searchCourseUni}
+
+		retList := []Course{}
+		findCourse(reqs, &retList)
+		http.Redirect(w, r, "/course/"+strconv.Itoa(retList[0].Id), http.StatusSeeOther)
 
 	}
 }
