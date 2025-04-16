@@ -1,23 +1,38 @@
 {{ define "Content" }}
+<!-- Side Nav Bar -->
+<div id="mySidenav" class="sidenav">
+  {{range .Data.SBar.Sections}}
+    <h2>{{.Title}}</h2>
+    {{$sectionTitle := .Title}}
+      {{range .Items}}
+      <a href='?{{$sectionTitle}}={{.}}'>{{.}}</a>   
+  {{end}}
+  {{end}}
+  
+</div>
+ <script>
+// document.getElementById("mySidenav").style.width = "160px";
+</script>
 <!-- Search Bar -->
+<div class="course">
 <div class="search">
-<h1>Search {{.Data.Title}}</h1>
-<form method="post">
-  <input type="text" class="search__bar" list="searchCourses" placeholder="Search {{.Data.Title}}" name="searchCourse" id="searchCourse">
+<h1>Search {{.Data.LCourses.Title}}</h1>
+<form method="post" action="/submit">
+  <input type="text" class="search__bar" list="searchCourses" placeholder="Search {{.Data.LCourses.Title}}" name="searchCourse" id="searchCourse">
   <datalist id="searchCourses">
-    {{range .Data.Courses}}
+    {{range .Data.LCourses.Courses}}
       <option value="{{.CourseName}} - {{.University}}"></option>
     {{end}}
   </datalist>
 </form>
 </div>
 <br>
-<div class="course">
+<!-- <div class="course"> -->
   <!-- Courses Display -->
 
-<h1>{{.Data.Title}}</h1>
+<h1>{{.Data.LCourses.Title}}</h1>
     <div class="course__container">
-          {{range .Data.Courses}}
+          {{range .Data.LCourses.Courses}}
               <div class="course__card">
                 <h2>{{.CourseName}}</h2>
                 <p>{{.University}}</p>

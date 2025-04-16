@@ -47,25 +47,39 @@ func renderTemplate(w http.ResponseWriter, tmpl string, data any) {
 //	the home page is processed before sending it to renderTemplate
 func homePage(w http.ResponseWriter, r *http.Request) {
 	courses := []Course{}
+	universities := []string{}
+
 	getAllCourses(&courses)
+	getDistProperty("university", &universities)
+
+	// Check for a university filter in the query parameters
+	selectedUniversity := r.URL.Query().Get("university")
+	retList := []Course{}
+	findCourses(map[string]string{"university": selectedUniversity}, &retList)
+
+	if selectedUniversity != "" {
+		courses = retList
+	}
 	data := PageContent{
 		Title: "Home",
-		Data: ListCourses{
-			Title:   "All Courses",
-			Courses: courses,
+		Data: Home{
+			LCourses: ListCourses{
+				Title:   "All Courses",
+				Courses: courses,
+			},
+			SBar: SideBar{
+				Sections: []Section{
+					{Title: "university",
+						Items: universities},
+				},
+			},
 		},
 	}
 
-	if searchCourse := r.FormValue("searchCourse"); searchCourse != "" {
-		var searchCourseSp = strings.Split(searchCourse, " - ")
-		var searchCourseName = searchCourseSp[0]
-		var searchCourseUni = searchCourseSp[1]
-
-		var selectedCourse = findCourse(searchCourseName, searchCourseUni)
-		http.Redirect(w, r, "/course/"+strconv.Itoa(selectedCourse.Id), http.StatusSeeOther)
-	} else {
+	if searchCourse := r.FormValue("searchCourse"); searchCourse == "" {
 		renderTemplate(w, "Index.html", data)
 	}
+
 }
 
 func homePagePOST(w http.ResponseWriter, r *http.Request) {
@@ -74,8 +88,17 @@ func homePagePOST(w http.ResponseWriter, r *http.Request) {
 		var searchCourseName = searchCourseSp[0]
 		var searchCourseUni = searchCourseSp[1]
 
-		var selectedCourse = findCourse(searchCourseName, searchCourseUni)
-		http.Redirect(w, r, "/course/"+strconv.Itoa(selectedCourse.Id), http.StatusSeeOther)
+		var reqs = map[string]string{
+			"courseName": searchCourseName,
+			"university": searchCourseUni}
+
+		retList := []Course{}
+		findCourses(reqs, &retList)
+		if len(retList) > 0 {
+			http.Redirect(w, r, "/course/"+strconv.Itoa(retList[0].Id), http.StatusSeeOther)
+		} else {
+			http.Error(w, "Course not found", http.StatusNotFound)
+		}
 
 	}
 }
@@ -123,9 +146,9 @@ func coursePage(w http.ResponseWriter, r *http.Request) {
 func main() {
 	initCourseDB()
 	initUserDB()
-	// coursesStarterData()
-	allUniversities := []string{}
-	getDistProperty("university", allUniversities)
+	//coursesStarterData()
+	// allUniversities := []string{}
+	// getDistProperty("university", &allUniversities)
 
 	// Serve static assets (ie. css)
 	fs := http.FileServer(http.Dir("static/"))
